@@ -2,8 +2,6 @@ from fastapi import FastAPI, HTTPException, APIRouter, Path, Body, status
 from typing import List, Optional
 from datetime import datetime
 
-# Assuming models_supplier_module.py is in a directory accessible by PYTHONPATH
-# For the structure app/models/ and app/apis/, with main_api.py in app/:
 from ..models.models_supplier_module import (
     Supplier, SupplierCreate,
     SupplierProduct, SupplierProductCreate
@@ -12,15 +10,15 @@ from ..models.models_supplier_module import (
 # Mock Database
 # IMPORTANT: When integrated into main_api.py, this local mock_db will be
 # superseded by the shared_mock_db instance from main_api.py.
-mock_db_supplier_module = { 
+mock_db_supplier_module = {
     "suppliers": {},
-    "supplier_products": {}, 
+    "supplier_products": {},
     "next_supplier_id": 1,
     "next_supplier_product_id": 1,
 }
 
 router = APIRouter(
-    prefix="/api/v1", 
+    prefix="/api/v1",
     tags=["Suppliers Module"]
 )
 
@@ -41,7 +39,7 @@ async def create_supplier_endpoint(supplier_in: SupplierCreate):
         supplierID=new_id,
         createdAt=datetime.utcnow(),
         updatedAt=datetime.utcnow(),
-        suppliedProducts=[], 
+        suppliedProducts=[],
         **supplier_in.model_dump()
     )
     mock_db_supplier_module["suppliers"][new_id] = db_supplier
@@ -129,10 +127,11 @@ async def update_supplier_product_link_endpoint(supplier_id: int = Path(..., tit
     if not link_to_update:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product link not found.")
     updated_sp_data = supplier_product_in.model_dump(exclude_unset=True)
-    updated_sp_data['productID'] = product_id_in_path 
+    # Ensure productID from path is used, not from body if it were different (though we check for mismatch)
+    updated_sp_data['productID'] = product_id_in_path
     updated_sp = link_to_update.model_copy(update=updated_sp_data)
     updated_sp.updatedAt = datetime.utcnow()
-    mock_db_supplier_module["supplier_products"][link_to_update.supplierProductID] = updated_sp 
+    mock_db_supplier_module["supplier_products"][link_to_update.supplierProductID] = updated_sp # Update by its PK
     return updated_sp
 
 @router.delete("/suppliers/{supplier_id}/products/{product_id_in_path}", status_code=status.HTTP_204_NO_CONTENT)
@@ -143,3 +142,11 @@ async def remove_product_from_supplier_endpoint(supplier_id: int = Path(..., tit
     if link_id_to_delete is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product link not found.")
     del mock_db_supplier_module["supplier_products"][link_id_to_delete]
+
+# Standalone runner for testing
+if __name__ == "__main__":
+    app_test = FastAPI(title="Suppliers API Test")
+    app_test.include_router(router)
+    import uvicorn
+    uvicorn.run(app_test, host="127.0.0.1", port=8002)
+```

@@ -1,19 +1,9 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
 from fastapi import FastAPI, HTTPException, APIRouter, Path, Body, status
 from typing import List, Optional
 from datetime import datetime
 
 # Assuming models_customer_module.py is in a directory accessible by PYTHONPATH
-<<<<<<< HEAD
-# For the structure app/models/ and app/apis/, with main_api.py in app/:
 from ..models.models_customer_module import (
-=======
-# Adjust import path based on your project structure, e.g., from ..models.models_customer_module import ...
-from models_customer_module import (
->>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
     CustomerGroup, CustomerGroupCreate,
     Customer, CustomerCreate
 )
@@ -21,29 +11,17 @@ from models_customer_module import (
 # Mock Database
 # IMPORTANT: When integrated into main_api.py, this local mock_db will be
 # superseded by the shared_mock_db instance from main_api.py.
-<<<<<<< HEAD
-mock_db_customer_module = { 
-=======
 mock_db_customer_module = {
->>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
     "customer_groups": {
         1: CustomerGroup(customerGroupID=1, groupName="Default Retail", description="Default retail customer group", createdAt=datetime.utcnow(),updatedAt=datetime.utcnow())
     },
     "customers": {},
-<<<<<<< HEAD
-    "next_customer_group_id": 2, 
-=======
     "next_customer_group_id": 2,
->>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
     "next_customer_id": 1,
 }
 
 router = APIRouter(
-<<<<<<< HEAD
-    prefix="/api/v1", 
-=======
     prefix="/api/v1",
->>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
     tags=["Customers Module"]
 )
 
@@ -168,8 +146,6 @@ async def delete_customer_endpoint(customer_id: int = Path(..., title="The ID of
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
     # Placeholder for checking transactions
     del mock_db_customer_module["customers"][customer_id]
-<<<<<<< HEAD
-=======
 
 # Standalone runner for testing
 if __name__ == "__main__":
@@ -178,4 +154,3 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app_test, host="127.0.0.1", port=8001)
 ```
->>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
