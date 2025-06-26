@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 # This file makes 'apis' a Python sub-package of 'app'.
 # It can be empty.
-# # This file makes 'apis' a Python sub-package of 'app'.
-# It can be empty.
-=======
-# This file makes 'apis' a Python sub-package
-# It can be empty
->>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
+# This allows imports like 'from .api_product_module import ...' from within this package,
+# or 'from app.apis.api_product_module import ...' from outside (if 'app' is in PYTHONPATH).
