@@ -1,11 +1,20 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
 from fastapi import FastAPI, HTTPException, APIRouter, Path, Body, status, UploadFile, File, Form
 from typing import List, Optional
 from datetime import datetime
 
 # Assuming models_product_module.py is in a directory accessible by PYTHONPATH
 # For the structure app/models/ and app/apis/, with main_api.py in app/:
+<<<<<<< HEAD
 from ..models.models_product_module import (
+=======
+# from ..models.models_product_module import (
+# For now, using direct import assuming flat structure for standalone module testing or correct PYTHONPATH
+from models_product_module import (
+>>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
     Category, CategoryCreate,
     Product, ProductCreate,
     ProductImage, ProductImageCreate, ProductImageBase
@@ -37,7 +46,11 @@ async def create_category_endpoint(category_in: CategoryCreate):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Category name already exists")
     if category_in.parentCategoryID and category_in.parentCategoryID not in mock_db["categories"]:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Parent CategoryID '{category_in.parentCategoryID}' not found")
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
     new_id = mock_db["next_category_id"]
     db_category = Category(
         categoryID=new_id,
@@ -74,10 +87,17 @@ async def update_category_endpoint(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Category name already exists")
     if category_in.parentCategoryID and category_in.parentCategoryID not in mock_db["categories"]:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Parent CategoryID '{category_in.parentCategoryID}' not found")
+<<<<<<< HEAD
     if category_in.parentCategoryID == category_id: 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Category cannot be its own parent.")
     updated_category_data = category_in.model_dump(exclude_unset=True)
     updated_category = current_category.model_copy(update=updated_category_data) 
+=======
+    if category_in.parentCategoryID == category_id:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Category cannot be its own parent.")
+    updated_category_data = category_in.model_dump(exclude_unset=True)
+    updated_category = current_category.model_copy(update=updated_category_data)
+>>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
     updated_category.updatedAt = datetime.utcnow()
     mock_db["categories"][category_id] = updated_category
     return updated_category
@@ -120,7 +140,11 @@ async def get_all_products_endpoint(skip: int = 0, limit: int = 10, category_id:
 
 @router.get("/products/{product_id}", response_model=Product)
 async def get_product_by_id_endpoint(product_id: int = Path(..., title="The ID of the product")):
+<<<<<<< HEAD
     product_item = mock_db["products"].get(product_id) 
+=======
+    product_item = mock_db["products"].get(product_id)
+>>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
     if not product_item: raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     images = [img for img in mock_db["product_images"].values() if img.productID == product_id]
     temp_prod_dict = product_item.model_dump(); temp_prod_dict['images'] = images
@@ -156,7 +180,11 @@ async def add_product_image_endpoint(product_id: int = Path(..., title="Product 
     if product_id not in mock_db["products"]: raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     if image_in.isPrimaryImage:
         for img in mock_db["product_images"].values():
+<<<<<<< HEAD
             if img.productID == product_id and img.isPrimaryImage: img.isPrimaryImage = False 
+=======
+            if img.productID == product_id and img.isPrimaryImage: img.isPrimaryImage = False
+>>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
     new_id = mock_db["next_product_image_id"]
     db_image = ProductImage(productImageID=new_id, productID=product_id, uploadedAt=datetime.utcnow(), **image_in.model_dump())
     mock_db["product_images"][new_id] = db_image
@@ -169,9 +197,15 @@ async def update_product_image_details_endpoint(product_id: int = Path(..., titl
     if image_id not in mock_db["product_images"] or mock_db["product_images"][image_id].productID != product_id:
         raise HTTPException(status_code=404, detail="Image not found for this product")
     current_image = mock_db["product_images"][image_id]
+<<<<<<< HEAD
     if image_in.isPrimaryImage and not current_image.isPrimaryImage: 
         for img in mock_db["product_images"].values():
             if img.productID == product_id and img.isPrimaryImage and img.productImageID != image_id: img.isPrimaryImage = False 
+=======
+    if image_in.isPrimaryImage and not current_image.isPrimaryImage:
+        for img in mock_db["product_images"].values():
+            if img.productID == product_id and img.isPrimaryImage and img.productImageID != image_id: img.isPrimaryImage = False
+>>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
     updated_image_data = image_in.model_dump(exclude_unset=True)
     updated_image = current_image.model_copy(update=updated_image_data)
     mock_db["product_images"][image_id] = updated_image
@@ -182,3 +216,15 @@ async def delete_product_image_endpoint(product_id: int = Path(..., title="Produ
     if image_id not in mock_db["product_images"] or mock_db["product_images"][image_id].productID != product_id:
         raise HTTPException(status_code=404, detail="Image not found for this product")
     del mock_db["product_images"][image_id]
+<<<<<<< HEAD
+=======
+
+# Standalone runner for testing this module
+if __name__ == "__main__":
+    app_product_test = FastAPI(title="ERP Products Module API - Test")
+    app_product_test.include_router(router)
+    import uvicorn
+    print("Starting Uvicorn for Products API Test (port 8003)...")
+    uvicorn.run(app_product_test, host="127.0.0.1", port=8003, reload=False)
+```
+>>>>>>> 49d0fbfa0cda18a40014249d83f9fa5f79187d0b
